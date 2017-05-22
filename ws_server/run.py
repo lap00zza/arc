@@ -21,8 +21,28 @@ along with arc.  If not, see <http://www.gnu.org/licenses/>.
 import asyncio
 import websockets
 import json
+from threading import Thread, Event
 
 connected = []
+
+
+class HeartbeatThread(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        self.event = Event()
+        self.loop = asyncio.get_event_loop()
+
+    def run(self):
+        # TODO: probably find a better way to send heartbeats
+        while not self.event.wait(10):
+            print("sending heartbeat")
+            for ws in connected:
+                message = json.dumps({
+                    "event": "heartbeat",
+                    "data": None
+                })
+                asyncio.run_coroutine_threadsafe(ws.send(message), self.loop)
+
 
 async def handler(websocket, path):
     global connected
@@ -51,6 +71,9 @@ async def handler(websocket, path):
     finally:
         connected.remove(websocket)
         print(connected)
+
+t = HeartbeatThread()
+t.start()
 
 start_server = websockets.serve(handler, "0.0.0.0", 5555)
 asyncio.get_event_loop().run_until_complete(start_server)
