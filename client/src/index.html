@@ -6,12 +6,26 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<div id="app">
-    <div class="view" id="viewMessage">
-        
-    </div>
-    <div class="send">
-        <input type="text" id="sendMessage" title="Broadcast a message to everyone.">
+<div class="title-bar">
+    <span class="title">arc</span>&nbsp;<span class="subtitle">dead simple chat</span>
+</div>
+<div id="app-mount">
+    <div class="app flex-container">
+        <div class="column column-three sidebar">
+
+        </div>
+        <div class="column column-thirteen">
+            <div class="view layer">
+                <div class="container" id="viewMessage">
+                    <!-- Messages go here -->
+                </div>
+            </div>
+            <div class="send layer">
+                <div class="container">
+                    <input type="text" id="sendMessage" title="Broadcast a message to everyone.">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
