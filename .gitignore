@@ -1,6 +1,8 @@
 .idea/
 
 # Created by https://www.gitignore.io/api/python
+### Node ###
+node_modules/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

@@ -1,0 +1,16 @@
+{
+  "name": "arc",
+  "version": "0.1.0",
+  "devDependencies": {
+    "del": "latest",
+    "gulp": "latest",
+    "gulp-sass": "latest",
+    "gulp-util": "latest",
+    "run-sequence": "latest",
+    "vue": "latest",
+    "vue-loader": "latest",
+    "vue-router": "latest",
+    "vue-template-compiler": "latest",
+    "webpack": "latest"
+  }
+}
