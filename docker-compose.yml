@@ -1,0 +1,15 @@
+version: "2"
+services:
+    nginx:
+        build: ./client
+        image: arc/nginx:0.1.0
+        restart: always
+        ports:
+            - "80:80"
+    ws_server:
+        build: ./ws_server
+        image: arc/ws_server:0.1.0
+        restart: always
+        command: python run.py
+        expose:
+            - "5555"
