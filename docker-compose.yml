@@ -20,3 +20,12 @@ services:
         command: python run.py
         expose:
             - "5555"
+
+    api_server:
+        build: ./api_server
+        image: arc/api_server:0.1.0
+        restart: always
+        # TODO: need to start using gunicorn for this
+        command: python run.py
+        expose:
+            - "10000"
