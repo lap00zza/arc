@@ -1,65 +1,76 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:300,400,600')
 @import "variables"
+@import "structure"
 
 body
     margin: 0
     font-family: 'Raleway', sans-serif
     font-size: 0.9em
 
-.column
-    position: relative
-    flex: auto
-    &.column-three
-        width: 18.75%
-    &.column-four
-        width: 25%
-    &.column-twelve
-        width: 75%
-    &.column-thirteen
-        width: 81.25%
-
-.flex-container
-    display: flex
-    height: 100%
-
-.container
-    padding: 1em
-
-.layer
-    position: absolute
-    width: 100%
-
-.title-bar
-    height: $titleBarHeight
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2)
-    //box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
-    line-height: $titleBarHeight
-    padding-left: 4em
-    .title
-        font-size: 1.7em
-        font-weight: 600
-
-    .subtitle
-        font-size: 1em
-        font-weight: 300
+//.title-bar
+//    height: $titleBarHeight
+//    border-bottom: 1px solid rgba(0, 0, 0, 0.2)
+//    //box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
+//    line-height: $titleBarHeight
+//    padding-left: 4em
+//    .title
+//        font-size: 1.7em
+//        font-weight: 600
+//
+//    .subtitle
+//        font-size: 1em
+//        font-weight: 300
 
 #app-mount
     position: absolute
-    top: $titleBarHeight
+    top: 0
     right: 0
     bottom: 0
     left: 0
     text-rendering: optimizeLegibility
 
-.sidebar
+.app_container
+    display: flex
+    height: 100%
+
+// Layers for channel container
+.channel_container
     border-right: 1px solid #dedede
+    background: $color-secondary-1-3
+    width: 220px
+
+// Layers for main container
+.main_container
+    position: relative
+    flex: auto
+
+.info
+    top: 0
+    right: 0
+    height: $descriptionHeight
+    border-bottom: 1px solid #dedede
+    display: flex
+    align-items: center
+    z-index: 200
+
+    .info-item
+        margin-left: 1em
+
+    .name
+        font-weight: 600
+        font-size: 1.3em
+    .description
+        //font-size: 0.85em
+        color: #717274
 
 .view
     overflow-x: hidden
     overflow-y: auto
-    top: 0
+    top: $descriptionHeight
     bottom: $sendHeight
     right: 0
+    //padding-top: 1em
+    padding-bottom: 1em
 
 .send
     height: $sendHeight
@@ -71,7 +82,31 @@ body
     input
         width: 100%
 
+.credits
+    margin-left: 1em
+
 .message
-    border-bottom: 1px solid #eeeeee
-    padding-top: 0.4em
-    padding-bottom: 0.4em
+    //border-bottom: 1px solid #eeeeee
+    display: flex
+    padding: 0.4em 1em
+
+    .profile_image
+        width: 40px
+        min-width: 40px
+        img
+            max-width: 36px
+            max-height: 36px
+
+            // Remove the following when I finally
+            // implement profile images
+            opacity: 0.2
+            border-radius: 5px
+
+    .message_body
+        flex: auto
+        padding-left: 0.5em
+        .author
+            font-weight: 600
+
+    &:hover
+        background: #fafafa

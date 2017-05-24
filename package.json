@@ -10,6 +10,7 @@
     "vue": "latest",
     "vue-loader": "latest",
     "vue-router": "latest",
+    "vue-resource": "latest",
     "vue-template-compiler": "latest",
     "webpack": "latest"
   }

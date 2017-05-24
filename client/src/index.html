@@ -3,31 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>arc</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/build/style.css">
 </head>
 <body>
-<div class="title-bar">
+<!--<div class="title-bar">
     <span class="title">arc</span>&nbsp;<span class="subtitle">dead simple chat</span>
-</div>
+</div>-->
 <div id="app-mount">
-    <div class="app flex-container">
-        <div class="column column-three sidebar">
+    <div class="app_container">
+        <div class="channel_container">
 
         </div>
-        <div class="column column-thirteen">
-            <div class="view layer">
-                <div class="container" id="viewMessage">
-                    <!-- Messages go here -->
+        <div class="main_container">
+            <div class="info layer">
+                <div class="info-item">
+                    <div class="name">#general</div>
+                    <div class="description">Discuss anything here :)</div>
                 </div>
             </div>
+            <div class="view layer">
+                <!-- messages needs to be bound as they will change over time. -->
+                <message-view v-bind:messages="messages"></message-view>
+            </div>
             <div class="send layer">
-                <div class="container">
-                    <input type="text" id="sendMessage" title="Broadcast a message to everyone.">
-                </div>
+                <message-send></message-send>
+                <span class="credits"><strong>arc!</strong> made with <3 by <a href="https://github.com/lap00zza">@lap00zza</a></span>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script src="assets/js/core.js"></script>
+<script src="assets/build/core.bundle.js"></script>
 </html>

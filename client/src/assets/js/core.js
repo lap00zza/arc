@@ -17,60 +17,58 @@
  *  You should have received a copy of the GNU General Public License
  *  along with arc.  If not, see <http://www.gnu.org/licenses/>.
  */
+import Vue from "vue";
+// import VueRouter from "vue-router";
+import VueResource from "vue-resource";
+import * as MessageView from "../components/messageView/messageView.vue";
+import * as MessageSend from "../components/messageSend/messageSend.vue";
 
-(function () {
-    var ws_url = "ws://" + window.location.hostname + "/ws";
-    var ws = new WebSocket(ws_url);
-    var vm = document.getElementById("viewMessage");
-    var sm = document.getElementById("sendMessage");
+// Vue.use(VueRouter);
+Vue.use(VueResource);
 
-    function send(data, event = "message") {
-        ws.send(JSON.stringify({
-            event: event,
-            data: data
-        }))
+// const router = new VueRouter({
+//     routes: [
+//         {path: "/", component: Home},
+//         {path: "/browse", component: Browse}
+//     ]
+// });
+
+window.app = new Vue({
+    data: {
+        messages: []
+    },
+    components: {
+        messageView: MessageView,
+        messageSend: MessageSend
     }
+}).$mount("#app-mount");
 
-    function parse(data) {
-        return JSON.parse(data)
+var ws_url = "ws://" + window.location.hostname + "/ws";
+var ws = new WebSocket(ws_url);
+
+function parse(data) {
+    return JSON.parse(data)
+}
+
+// We parse all the incoming events here and
+// distribute it to the various event handlers.
+ws.onmessage = function (event) {
+    console.log(event);
+    var parsed = parse(event.data);
+    
+    switch (parsed.type) {
+        case "ready":
+            app.messages.push({
+                id: parsed.s, 
+                data: parsed.data
+            });
+            break;
+
+        case "message":
+            app.messages.push({
+                id: parsed.s, 
+                data: parsed.data
+            });
+            break;
     }
-
-    function handle_message(data) {
-        var messageObj = document.createElement("div");
-        messageObj.classList.add("message");
-        messageObj.innerHTML =
-            `<div>${data}</div>`;
-
-        vm.appendChild(messageObj);
-
-        // once we append the message, we scroll
-        // to the bottom
-        vm.scrollTop = vm.scrollHeight;
-    }
-
-    // We parse all the incoming events here and
-    // distribute it to the various event handlers.
-    ws.onmessage = function (event) {
-        console.log(event);
-
-        var parsed = parse(event.data);
-        switch (parsed.event) {
-            case "ready":
-                handle_message(parsed.data);
-                break;
-
-            case "message":
-                handle_message(parsed.data);
-                break;
-        }
-    };
-
-    // if the user presses the enter key, we send
-    // the message to the WebSocket server
-    sm.addEventListener("keydown", function (e) {
-        if (e.keyCode === 13) {
-            send(this.value);
-            this.value = "";
-        }
-    });
-})();
+};
