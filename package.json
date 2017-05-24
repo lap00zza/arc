@@ -2,16 +2,17 @@
   "name": "arc",
   "version": "0.1.0",
   "devDependencies": {
-    "del": "latest",
-    "gulp": "latest",
-    "gulp-sass": "latest",
-    "gulp-util": "latest",
-    "run-sequence": "latest",
-    "vue": "latest",
-    "vue-loader": "latest",
-    "vue-router": "latest",
-    "vue-resource": "latest",
-    "vue-template-compiler": "latest",
-    "webpack": "latest"
+    "css-loader": "^0.28.2",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-util": "^3.0.8",
+    "run-sequence": "^1.2.2",
+    "vue": "^2.3.3",
+    "vue-loader": "^12.1.0",
+    "vue-resource": "^1.3.3",
+    "vue-router": "^2.5.3",
+    "vue-template-compiler": "^2.3.3",
+    "webpack": "^2.6.0"
   }
 }
