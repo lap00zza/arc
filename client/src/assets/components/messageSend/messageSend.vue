@@ -1,6 +1,14 @@
 <template>
-    <div class="container">
-        <input type="text" v-model="sendMessageInput" v-on:keydown="sendMessage" placeholder="Send a message!">
+    <div class="message-send">
+        <div class="widget">
+            <div class="text">
+                <textarea rows="1" v-model="sendMessageInput"
+                          v-on:input="onInput" v-on:keydown="onKeyDown"
+                          placeholder="Message #general"></textarea>
+            </div>
+            <div class="emojis"></div>
+        </div>
+        <div class="meta">press <code>enter</code> to send message</div>
     </div>
 </template>
 <script src="./messageSend.js"></script>
