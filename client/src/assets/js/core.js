@@ -33,7 +33,17 @@ Vue.use(VueResource);
 //     ]
 // });
 
-window.app = new Vue({
+// A custom directive that auto scrolls 
+// the message view when new message is
+// added to it.
+Vue.directive("auto-scroll", {
+    componentUpdated: function (el) {
+        // console.log(el, el.scrollHeight);
+        el.scrollTop = el.scrollHeight;
+    }
+});
+
+var arc = new Vue({
     data: {
         messages: []
     },
@@ -58,14 +68,14 @@ ws.onmessage = function (event) {
     
     switch (parsed.type) {
         case "ready":
-            app.messages.push({
+            arc.messages.push({
                 id: parsed.s, 
                 data: parsed.data
             });
             break;
 
         case "message":
-            app.messages.push({
+            arc.messages.push({
                 id: parsed.s, 
                 data: parsed.data
             });

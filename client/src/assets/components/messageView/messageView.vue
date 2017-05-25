@@ -1,6 +1,5 @@
-<!-- TODO: implement auto-scroll -->
 <template>
-    <div id="viewMessage">
+    <div class="message-view" v-auto-scroll>
         <message v-for="message in messages"
                  v-bind:message="message.data"
                  v-bind:key="message.id">
