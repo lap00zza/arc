@@ -11,24 +11,35 @@
 </div>-->
 <div id="app-mount">
     <div class="app_container">
-        <div class="channel_container">
+        <div class="channel_container flex-column">
 
         </div>
-        <div class="main_container">
-            <div class="info layer">
+        <div class="main_container flex-spacer flex-column">
+            <div class="info flex-row">
                 <div class="info-item">
                     <div class="name">#general</div>
                     <div class="description">Discuss anything here :)</div>
                 </div>
             </div>
-            <div class="view layer">
+            <div class="view flex-spacer flex-row">
                 <!-- messages needs to be bound as they will change over time. -->
-                <message-view v-bind:messages="messages"></message-view>
+                <div class="flex-spacer flex-column">
+                    <div class="flex-column flex-spacer">
+                        <message-view v-bind:messages="messages"></message-view>
+                    </div>
+                    <div class="message-send-wrapper">
+                        <message-send></message-send>
+                    </div>
+                </div>
+                <div class="users flex-column">
+
+                </div>
+
             </div>
-            <div class="send layer">
-                <message-send></message-send>
-                <span class="credits"><strong>arc!</strong> made with <3 by <a href="https://github.com/lap00zza">@lap00zza</a></span>
-            </div>
+            <!--<div class="send layer">-->
+                <!---->
+                <!--&lt;!&ndash;<span class="credits"><strong>arc!</strong> made with <3 by <a href="https://github.com/lap00zza">@lap00zza</a></span>&ndash;&gt;-->
+            <!--</div>-->
         </div>
     </div>
 </div>
