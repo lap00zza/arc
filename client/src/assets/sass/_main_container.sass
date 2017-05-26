@@ -21,76 +21,41 @@
     .name
         font-weight: 600
         font-size: 1.3em
+
     .description
-        //font-size: 0.85em
         color: #717274
 
-// TODO: everything below needs a lot of work
 .view
     .message-view
         overflow-x: hidden
         overflow-y: auto
 
+// FIXME: the text area is not exactly at the center
 .message-send-wrapper
     box-sizing: border-box
-    padding: 0.5em 1em
     border-top: 1px solid #dedede
-    //background: #f5f5f5
 
     .message-send
+        margin: 1em 1em 1.5em 1em
         .widget
-            //margin: 1em
-            background: #ffffff
             border: 2px solid #dedede
             border-radius: 5px
             display: flex
             box-sizing: border-box
+            padding: 0.5em 0.5em
 
-            .text
-                flex: 1
-                padding: 0 0.5em
-                textarea
-                    //margin: 1em auto
-                    font-family: 'Raleway', sans-serif
-                    max-height: 100px
-                    width: 100%
-                    border: 0
-                    padding: 0
-                    resize: none
-                    outline: none
-                    overflow-y: hidden
+            textarea
+                font-family: 'Raleway', sans-serif
+                max-height: 100px
+                width: 100%
+                border: 0
+                padding: 0
+                resize: none
+                outline: none
+                overflow-y: hidden
 
             .emojis
                 width: 40px
                 min-height: 40px
                 border-left: 2px solid #dedede
-
-.credits
-    margin-left: 1em
-
-.message
-    //border-bottom: 1px solid #eeeeee
-    display: flex
-    padding: 0.4em 1em
-    word-break: break-all
-
-    .profile_image
-        width: 40px
-        min-width: 40px
-        img
-            max-width: 36px
-            max-height: 36px
-
-            // Remove the following when I finally
-            // implement profile images
-            opacity: 0.2
-            border-radius: 5px
-
-    .message_body
-        flex: 1
-        padding-left: 0.5em
-        .author
-            font-weight: 600
-
-    &:hover
-        background: #fafafa
+                margin: -0.5em 0
