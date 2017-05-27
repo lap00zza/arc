@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--<base target="/">-->
     <meta charset="UTF-8">
     <title>arc</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!-- TODO: need to add a querystring at the end of css
     or cloudflare will keep stale css file. -->
-    <link rel="stylesheet" href="build/style.css">
+    <link rel="stylesheet" href="/src/build/style.css">
 </head>
 <body>
 <!--<div class="title-bar">
@@ -15,15 +17,17 @@
     <div class="app_container">
         <div class="channel_container flex-column">
             <div class="flex-column flex-spacer"></div>
+            <!-- Some good ol' credits -->
             <div class="credits flex-column">
                 <span class="title">arc!</span>
-                <span class="meta">made with <3 by <a href="https://github.com/lap00zza">@lap00zza</a></span>
+                <span class="meta">
+                    made with <3 by <a href="https://github.com/lap00zza" target="_blank">@lap00zza</a>
+                </span>
             </div>
         </div>
         <router-view></router-view>
-        <!--<channel-view v-bind:messages="messages"></channel-view>-->
     </div>
 </div>
 </body>
-<script src="build/core.bundle.js"></script>
+<script src="/src/build/core.bundle.js"></script>
 </html>

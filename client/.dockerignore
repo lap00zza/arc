@@ -1,5 +1,0 @@
-# We only need the build directory
-# inside the docker container.
-src/assets/js
-src/assets/sass
-src/components

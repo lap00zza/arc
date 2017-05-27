@@ -1,16 +1,11 @@
 version: "2"
 services:
     nginx:
-        build: ./client
+        build: ./nginx
         image: arc/nginx:0.1.0
         restart: always
         ports:
             - "80:80"
-        # We are going to use volume mounting for developement.
-        # Before deployment, its better to comment it out.
-        #volumes:
-        #    - /e/PyCharm_Projects/arc/client/src:/client
-        #    - /e/PyCharm_Projects/arc/client/src/assets/build:/client/assets/build
 
     ws_server:
         build: ./ws_server
@@ -28,3 +23,17 @@ services:
         command: python run.py
         expose:
             - "10000"
+
+    app:
+        build: ./app
+        image: arc/app:0.1.0
+        restart: always
+        # TODO: need to start using gunicorn for this
+        command: python run.py
+        expose:
+            - "1000"
+        # We are going to use volume mounting for developement.
+        # Before deployment, its better to comment it out.
+        # volumes:
+        #    - /e/PyCharm_Projects/arc/app/src:/app/src
+        #    - /e/PyCharm_Projects/arc/app/src/build:/app/src/build

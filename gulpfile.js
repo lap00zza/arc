@@ -9,11 +9,11 @@ var runSequence = require("run-sequence");
 gulp.task("webpack", function (callback) {
     webpack({
         entry: {
-            core: path.resolve(__dirname, "client/src/core.js")
+            core: path.resolve(__dirname, "app/src/core.js")
         },
         output: {
             filename: "[name].bundle.js",
-            path: path.resolve(__dirname, "client/src/build")
+            path: path.resolve(__dirname, "app/src/build")
         },
         module: {
           rules: [{
@@ -34,9 +34,9 @@ gulp.task("webpack", function (callback) {
 });
 
 gulp.task("sass", function () {
-    return gulp.src("client/src/assets/sass/*.sass")
+    return gulp.src("app/src/assets/sass/*.sass")
         .pipe(sass())
-        .pipe(gulp.dest("client/src/build"));
+        .pipe(gulp.dest("app/src/build"));
 });
 
 // Build the sass and the JS files.

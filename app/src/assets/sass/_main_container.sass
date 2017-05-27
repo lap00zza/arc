@@ -25,6 +25,21 @@
     .description
         color: #717274
 
+// When the display becomes small we show
+// this channel toggle button.
+.toggle-channel-list
+    img
+        cursor: pointer
+        height: 20px
+        width: 20px
+        opacity: 0.2
+        &:hover
+            opacity: 0.5
+
+@media screen and (max-width: 500px)
+    .toggle-channel-list
+        display: block !important
+
 .view
     .message-view
         overflow-x: hidden

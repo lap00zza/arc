@@ -34,17 +34,9 @@ body
     display: flex
     height: 100%
 
-@keyframes slideLeft
-    from
-        margin-left: 0
-    to
-        margin-left: -220px
-
 @media screen and (max-width: 500px)
     .channel_container
-        animation: slideLeft
-        animation-fill-mode: forwards
-        animation-duration: 1s
+        margin-left: -220px
 
 // Layers for channel container
 .channel_container
