@@ -55,6 +55,8 @@ class APIServer(Flask):
         Flask.__init__(self, __name__)
 
         # Register the routes
+        # TODO: message rate limit 10 per 5 second
+        # TODO: message character limit: 2000
         self.route("/api", methods=["GET", "POST"])(self.index)
         self.route("/api/messages", methods=["POST"])(self.post_message)
 

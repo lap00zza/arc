@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>arc</title>
-    <link rel="stylesheet" href="assets/build/style.css">
+    <!-- TODO: need to add a querystring at the end of css
+    or cloudflare will keep stale css file. -->
+    <link rel="stylesheet" href="build/style.css">
 </head>
 <body>
 <!--<div class="title-bar">
@@ -12,37 +14,16 @@
 <div id="app-mount">
     <div class="app_container">
         <div class="channel_container flex-column">
-
-        </div>
-        <div class="main_container flex-spacer flex-column">
-            <div class="info flex-row">
-                <div class="info-item">
-                    <div class="name">#general</div>
-                    <div class="description">Discuss anything here :)</div>
-                </div>
+            <div class="flex-column flex-spacer"></div>
+            <div class="credits flex-column">
+                <span class="title">arc!</span>
+                <span class="meta">made with <3 by <a href="https://github.com/lap00zza">@lap00zza</a></span>
             </div>
-            <div class="flex-spacer flex-row">
-                <!-- messages needs to be bound as they will change over time. -->
-                <div class="flex-spacer flex-column">
-                    <div class="view flex-column flex-spacer">
-                        <message-view v-bind:messages="messages"></message-view>
-                    </div>
-                    <div class="message-send-wrapper">
-                        <message-send></message-send>
-                    </div>
-                </div>
-                <div class="users flex-column">
-
-                </div>
-
-            </div>
-            <!--<div class="send layer">-->
-                <!---->
-                <!--&lt;!&ndash;<span class="credits"><strong>arc!</strong> made with <3 by <a href="https://github.com/lap00zza">@lap00zza</a></span>&ndash;&gt;-->
-            <!--</div>-->
         </div>
+        <router-view></router-view>
+        <!--<channel-view v-bind:messages="messages"></channel-view>-->
     </div>
 </div>
 </body>
-<script src="assets/build/core.bundle.js"></script>
+<script src="build/core.bundle.js"></script>
 </html>
