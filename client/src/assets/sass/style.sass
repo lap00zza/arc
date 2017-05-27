@@ -34,6 +34,18 @@ body
     display: flex
     height: 100%
 
+@keyframes slideLeft
+    from
+        margin-left: 0
+    to
+        margin-left: -220px
+
+@media screen and (max-width: 500px)
+    .channel_container
+        animation: slideLeft
+        animation-fill-mode: forwards
+        animation-duration: 1s
+
 // Layers for channel container
 .channel_container
     border-right: 1px solid #dedede
@@ -70,3 +82,15 @@ body
 
 .credits
     margin-left: 1em
+    margin-bottom: 0.5em
+    .title
+        font-size: 1.1em
+        font-weight: 600
+        color: $color-secondary-1-2
+    .meta
+        font-size: 0.8em
+        color: $color-secondary-1-1
+    span
+        display: inline-block
+    a
+        color: $color-secondary-1-1

@@ -2,4 +2,4 @@
 # inside the docker container.
 src/assets/js
 src/assets/sass
-src/assets/components
+src/components

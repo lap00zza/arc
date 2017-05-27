@@ -18,20 +18,12 @@
  *  along with arc.  If not, see <http://www.gnu.org/licenses/>.
  */
 import Vue from "vue";
-// import VueRouter from "vue-router";
 import VueResource from "vue-resource";
-import * as MessageView from "../components/messageView/messageView.vue";
-import * as MessageSend from "../components/messageSend/messageSend.vue";
+import store from "./store";
+import router from "./router"
+import { startWSConnection } from "./connection";
 
-// Vue.use(VueRouter);
 Vue.use(VueResource);
-
-// const router = new VueRouter({
-//     routes: [
-//         {path: "/", component: Home},
-//         {path: "/browse", component: Browse}
-//     ]
-// });
 
 // A custom directive that auto scrolls 
 // the message view when new message is
@@ -43,42 +35,14 @@ Vue.directive("auto-scroll", {
     }
 });
 
-var arc = new Vue({
+new Vue({
     data: {
         messages: []
     },
-    components: {
-        messageView: MessageView,
-        messageSend: MessageSend
-    }
+    router: router,
+    store: store
 }).$mount("#app-mount");
 
-var ws_url = "ws://" + window.location.hostname + "/ws";
-var ws = new WebSocket(ws_url);
-
-function parse(data) {
-    return JSON.parse(data)
-}
-
-// We parse all the incoming events here and
-// distribute it to the various event handlers.
-ws.onmessage = function (event) {
-    console.log(event);
-    var parsed = parse(event.data);
-    
-    switch (parsed.type) {
-        case "ready":
-            arc.messages.push({
-                id: parsed.s, 
-                data: parsed.data
-            });
-            break;
-
-        case "message":
-            arc.messages.push({
-                id: parsed.s, 
-                data: parsed.data
-            });
-            break;
-    }
-};
+// Start the websocket connection.
+// TODO: need to add reconnecting websocket
+startWSConnection();
