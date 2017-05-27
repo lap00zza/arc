@@ -10,13 +10,16 @@
     <link rel="stylesheet" href="/src/build/style.css">
 </head>
 <body>
-<!--<div class="title-bar">
-    <span class="title">arc</span>&nbsp;<span class="subtitle">dead simple chat</span>
-</div>-->
 <div id="app-mount">
     <div class="app_container">
         <div class="channel_container flex-column">
-            <div class="flex-column flex-spacer"></div>
+            <div class="flex-column flex-spacer">
+                <ul>
+                    <li><router-link to="/channel/develop">#develop</router-link></li>
+                    <li><router-link to="/channel/github_updates">#github_updates</router-link></li>
+                    <li><router-link to="/channel/fun">#fun</router-link></li>
+                </ul>
+            </div>
             <!-- Some good ol' credits -->
             <div class="credits flex-column">
                 <span class="title">arc!</span>
