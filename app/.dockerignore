@@ -1,7 +1,6 @@
 # We only need the build directory
 # inside the docker container.
 src/
-!src/index.html
 !src/favicon.ico
 !src/build
 !src/assets/images

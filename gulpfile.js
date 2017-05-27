@@ -5,6 +5,7 @@ var sass = require("gulp-sass");
 var gutil = require("gulp-util");
 var webpack = require("webpack");
 var runSequence = require("run-sequence");
+var flatten = require("gulp-flatten");
 
 gulp.task("webpack", function (callback) {
     webpack({
@@ -34,8 +35,9 @@ gulp.task("webpack", function (callback) {
 });
 
 gulp.task("sass", function () {
-    return gulp.src("app/src/assets/sass/*.sass")
+    return gulp.src("app/src/assets/**/*.sass")
         .pipe(sass())
+        .pipe(flatten())
         .pipe(gulp.dest("app/src/build"));
 });
 
