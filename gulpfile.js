@@ -6,6 +6,7 @@ var gutil = require("gulp-util");
 var webpack = require("webpack");
 var runSequence = require("run-sequence");
 var flatten = require("gulp-flatten");
+var autoprefixer = require("gulp-autoprefixer");
 
 gulp.task("webpack", function (callback) {
     webpack({
@@ -37,6 +38,9 @@ gulp.task("webpack", function (callback) {
 gulp.task("sass", function () {
     return gulp.src("app/src/assets/**/*.sass")
         .pipe(sass())
+        .pipe(autoprefixer({
+            cascade: false
+        }))
         .pipe(flatten())
         .pipe(gulp.dest("app/src/build"));
 });
