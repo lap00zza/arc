@@ -51,8 +51,10 @@ export default {
                         "Content-type": "application/x-www-form-urlencoded"
                     }
                 };
+                // encodeURIComponent to fix the bug when sending the character & (ampersand).
+                // TODO: maybe send the payload as json (like how discord does it)
                 this
-                    .$http.post("/api/messages", "author=anonymous&content=" + message, options)
+                    .$http.post("/api/messages", "author=anonymous&content=" + encodeURIComponent(message), options)
                     .then(function success() {
                         console.log("Message successfully sent!");
                         
