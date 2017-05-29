@@ -23,8 +23,13 @@ from threading import Thread
 import websockets
 import asyncio
 import json
+from .auth import Auth
+from datetime import datetime
+import os
 
 
+# TODO: Use a message broker (REDIS or rabbitMQ) for sending messages to the
+# ws server
 class WSClient(Thread):
     def __init__(self):
         Thread.__init__(self, daemon=True)
@@ -53,12 +58,14 @@ class WSClient(Thread):
 class APIServer(Flask):
     def __init__(self):
         Flask.__init__(self, __name__)
+        self.auth = Auth(os.environ.get("JWT_SECRET"), "HS256")
 
         # Register the routes
         # TODO: message rate limit 10 per 5 second
         # TODO: message character limit: 2000
         self.route("/api", methods=["GET", "POST"])(self.index)
-        self.route("/api/messages", methods=["POST"])(self.post_message)
+        self.route("/api/v1/messages", methods=["POST"])(self.post_message)
+        self.route("/api/v1/auth/login", methods=["POST"])(self.login)
 
         # start the ws client thread
         self.ws_client = WSClient()
@@ -68,7 +75,7 @@ class APIServer(Flask):
         self.ws_client.send_message("hello there. This is index.")
         return jsonify({
             "hello": "api is working properly"
-        })
+        }), 200
 
     def post_message(self):
         try:
@@ -80,10 +87,24 @@ class APIServer(Flask):
                 "author": author
             }))
             return jsonify({
-                "success": True
+                # TODO: the iso format doesn't append the last Z.
+                "timestamp": datetime.utcnow().isoformat()
             })
 
         except KeyError:
             return jsonify({
                 "error": "either content or author is not passed"
+            }), 400
+
+    def login(self):
+        try:
+            email = request.form["email"]
+            password = request.form["password"]
+            print(email, password)
+            return jsonify({
+                "token": self.auth.generate_token(email, password)
             })
+        except KeyError:
+            return jsonify({
+                "error": "either email or password is missing."
+            }), 400
