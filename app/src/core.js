@@ -20,8 +20,7 @@
 import Vue from "vue";
 import VueResource from "vue-resource";
 import store from "./store";
-import router from "./router"
-import { startWSConnection } from "./connection";
+import router from "./router";
 
 Vue.use(VueResource);
 
@@ -35,7 +34,7 @@ Vue.directive("auto-scroll", {
     }
 });
 
-new Vue({
+var app = new Vue({
     data: {
         messages: []
     },
@@ -43,6 +42,10 @@ new Vue({
     store: store
 }).$mount("#app-mount");
 
-// Start the websocket connection.
-// TODO: need to add reconnecting websocket
-startWSConnection();
+var token = window.localStorage.getItem("token");
+console.log(token);
+if (!token) {
+    app.$router.push({
+        name: "login"
+    })
+}

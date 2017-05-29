@@ -28,6 +28,8 @@
 <script>
     import * as MessageView from "../messageView/messageView.vue";
     import * as MessageSend from "../messageSend/messageSend.vue";
+    import {startWSConnection} from "../../connection";
+
     export default {
         components: {
             messageView: MessageView,
@@ -40,6 +42,11 @@
                 console.log(this.$props);
                 return this.$store.state.messages;
             }
+        },
+        created: function () {
+            // Start the websocket connection.
+            // TODO: need to add reconnecting websocket
+            startWSConnection();
         },
         props: ["channelName", "channelDesc", "channelId"]
     }
