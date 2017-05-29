@@ -39,14 +39,23 @@
             message_stack: function () {
                 // use this to make a function is store which
                 // returns messages for this channel only.
-                console.log(this.$props);
+                // console.log(this.$props);
                 return this.$store.state.messages;
             }
         },
         created: function () {
-            // Start the websocket connection.
-            // TODO: need to add reconnecting websocket
-            startWSConnection();
+            // TODO: maybe the websocket connection be delayed till we decide login
+            var token = window.localStorage.getItem("token");
+            console.log("token: ", token);
+            if (token) {
+                // Start the websocket connection.
+                // TODO: need to add reconnecting websocket
+                startWSConnection();
+            } else {
+                this.$router.push({
+                    name: "login"
+                })
+            }
         },
         props: ["channelName", "channelDesc", "channelId"]
     }

@@ -41,11 +41,3 @@ var app = new Vue({
     router: router,
     store: store
 }).$mount("#app-mount");
-
-var token = window.localStorage.getItem("token");
-console.log(token);
-if (!token) {
-    app.$router.push({
-        name: "login"
-    })
-}
