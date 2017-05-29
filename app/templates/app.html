@@ -11,25 +11,7 @@
 </head>
 <body>
 <div id="app-mount">
-    <div class="app_container">
-        <div class="channel_container flex-column">
-            <div class="flex-column flex-spacer">
-                <ul>
-                    <li><router-link to="/channel/develop">#develop</router-link></li>
-                    <li><router-link to="/channel/github_updates">#github_updates</router-link></li>
-                    <li><router-link to="/channel/fun">#fun</router-link></li>
-                </ul>
-            </div>
-            <!-- Some good ol' credits -->
-            <div class="credits flex-column">
-                <span class="title">arc!</span>
-                <span class="meta">
-                    made with <3 by <a href="https://github.com/lap00zza" target="_blank">@lap00zza</a>
-                </span>
-            </div>
-        </div>
-        <router-view></router-view>
-    </div>
+    <router-view></router-view>
 </div>
 </body>
 <script src="/src/build/core.bundle.js"></script>
