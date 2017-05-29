@@ -21,8 +21,8 @@ export default {
         }
     },
     methods: {
-        onInput: function () {
-            var textArea = this.$el.getElementsByTagName("textarea")[0];
+        onInput: function (e) {
+            var textArea = e.target;
             autoSizeTextarea(textArea);
         },
         onKeyDown: function (e) {
@@ -35,7 +35,7 @@ export default {
                 // prevent the default newline that is added
                 // to the textarea when enter key is pressed.
                 e.preventDefault();
-                var textArea = this.$el.getElementsByTagName("textarea")[0];
+                var textArea = e.target;
                 
                 // The following regex removes any whitespace character at 
                 // the start and at the end of the message.
@@ -46,15 +46,16 @@ export default {
                 if (message.length === 0) {
                     return false;
                 }
+
                 var options = {
                     headers: {
                         "Content-type": "application/x-www-form-urlencoded"
                     }
                 };
-                // encodeURIComponent to fix the bug when sending the character & (ampersand).
+
                 // TODO: maybe send the payload as json (like how discord does it)
                 this
-                    .$http.post("/api/messages", "author=anonymous&content=" + encodeURIComponent(message), options)
+                    .$http.post("/api/v1/messages", "author=anonymous&content=" + encodeURIComponent(message), options)
                     .then(function success() {
                         console.log("Message successfully sent!");
                         
