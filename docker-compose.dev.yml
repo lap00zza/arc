@@ -1,8 +1,8 @@
 version: "2"
 services:
-    app:
+    nginx:
         # We are going to use volume mounting for developement.
         # Before deployment, its better to comment it out.
         volumes:
-            - /e/PyCharm_Projects/arc/app/templates:/app/templates
-            - /e/PyCharm_Projects/arc/app/src/build:/app/src/build
+            - /e/PyCharm_Projects/arc/nginx/client:/client
+            - /e/PyCharm_Projects/arc/nginx/client/build:/client/build

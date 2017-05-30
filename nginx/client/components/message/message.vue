@@ -1,7 +1,7 @@
 <template>
     <div class="message" v-once>
         <div class="profile_image">
-            <img src="/src/assets/images/user_place_holder.png">
+            <img src="/assets/images/user_place_holder.png">
         </div>
         <div class="message_body">
             <div class="author">Anonymous</div>

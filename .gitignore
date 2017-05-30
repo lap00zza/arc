@@ -1,5 +1,6 @@
 .idea/
-app/src/build
+nginx/client/build
+nginx/extras
 
 # Created by https://www.gitignore.io/api/python
 ### Node ###

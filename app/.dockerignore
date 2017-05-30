@@ -1,6 +1,0 @@
-# We only need the build directory
-# inside the docker container.
-src/
-!src/favicon.ico
-!src/build
-!src/assets/images

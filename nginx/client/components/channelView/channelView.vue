@@ -2,7 +2,7 @@
     <div class="main_container flex-spacer flex-column">
         <div class="info flex-row">
             <div class="info-item toggle-channel-list" style="display: none;">
-                <img src="/src/assets/images/menu_toggle.png">
+                <img src="/assets/images/menu_toggle.png">
             </div>
             <div class="info-item">
                 <div class="name">{{ channelName }}</div>

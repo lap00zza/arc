@@ -11,11 +11,11 @@ var autoprefixer = require("gulp-autoprefixer");
 gulp.task("webpack", function (callback) {
     webpack({
         entry: {
-            core: path.resolve(__dirname, "app/src/core.js")
+            core: path.resolve(__dirname, "nginx/client/core.js")
         },
         output: {
             filename: "[name].bundle.js",
-            path: path.resolve(__dirname, "app/src/build")
+            path: path.resolve(__dirname, "nginx/client/build")
         },
         module: {
           rules: [{
@@ -36,13 +36,13 @@ gulp.task("webpack", function (callback) {
 });
 
 gulp.task("sass", function () {
-    return gulp.src("app/src/assets/**/*.sass")
+    return gulp.src("nginx/client/assets/**/*.sass")
         .pipe(sass())
         .pipe(autoprefixer({
             cascade: false
         }))
         .pipe(flatten())
-        .pipe(gulp.dest("app/src/build"));
+        .pipe(gulp.dest("nginx/client/build"));
 });
 
 // Build the sass and the JS files.

@@ -1,0 +1,7 @@
+# We only need the build directory
+# inside the docker container.
+client/
+!client/favicon.ico
+!client/build
+!client/assets/images
+!client/index.html

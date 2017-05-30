@@ -26,11 +26,3 @@ services:
         environment:
             # You should pass your JWT_SECRET here
             - JWT_SECRET=${JWT_SECRET}
-
-    app:
-        build: ./app
-        image: arc/app:0.1.0
-        restart: always
-        command: python run.py
-        expose:
-            - "1000"
