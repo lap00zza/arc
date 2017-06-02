@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import * as AppView from "./components/appView/appView.vue";
 import * as LoginView from "./components/loginView/loginView.vue";
+import * as RegisterView from "./components/registerView/registerView.vue";
 
 Vue.use(VueRouter);
 
@@ -21,12 +22,11 @@ export default new VueRouter({
     }, {
         path: "/login",
         component: LoginView,
-        name: "login",
-        // TODO: maybe a better way to pass this props?
-        props: {
-            serverName: "Arc Community",
-            serverDesc: "The official server for developement of arc"
-        }
+        name: "login"
+    },{
+        path: "/register",
+        component: RegisterView,
+        name: "register"
     },{
         // TODO: catch all should redirect to @me
         path: "*",
