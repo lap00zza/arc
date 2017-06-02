@@ -47,15 +47,15 @@ export default {
                     return false;
                 }
 
-                var options = {
-                    headers: {
-                        "Content-type": "application/x-www-form-urlencoded"
-                    }
-                };
-
                 // TODO: maybe send the payload as json (like how discord does it)
-                this
-                    .$http.post("/api/v1/messages", "author=anonymous&content=" + encodeURIComponent(message), options)
+                this.$http
+                    .post("/api/v1/messages", {
+                        content: message
+                    }, {
+                        headers: {
+                            Authorization: "Bearer " + window.localStorage.getItem("token")
+                        }
+                    })
                     .then(function success() {
                         console.log("Message successfully sent!");
                         
