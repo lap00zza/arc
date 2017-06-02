@@ -1,22 +1,25 @@
 <template>
-    <div class="flex-column flex-spacer login-view">
+    <div class="flex-column flex-spacer login__view">
         <div class="title-bar">
             <span class="title">arc!</span>&nbsp;<span class="subtitle">dead simple chat</span>
         </div>
         <div class="server-info">
-            <div class="name">Log in to <span>{{ serverName }}</span></div>
-            <div class="description">{{ serverDesc }}</div>
+            <div class="name">Log in to arc!</div>
+            <div class="description">may the force be with you</div>
+            <div id="notification">{{ status }}</div>
             <form v-on:submit="onSubmit">
-                <input name="email" type="text" placeholder="email">
-                <input name="password" type="password" placeholder="password">
-                <button type="submit">Log in</button>
+                <input v-model="email" type="text" placeholder="email" required>
+                <input v-model="password" type="password" placeholder="password" required>
+                <button type="submit" v-bind:class="in_progress ? 'login__btn--in-progress' : 'login__btn--rest'">
+                    <span>Log in</span>
+                    <img src="/assets/images/puff.svg">
+                </button>
             </form>
             <div class="keep-left extras">
-                <a href="#" id="register">Register</a>
-                <a href="#" id="guest_login" class="pull-right">Continue as Guest</a>
+                Don't have an account? <router-link to="register">Register</router-link>
             </div>
         </div>
-        <div class="_login_meta">
+        <div class="login__meta">
             Did you know you can host your very own arc! server?
             <a href="https://github.com/lap00zza/arc" target="_blank">Find out how.</a>
         </div>
