@@ -225,8 +225,8 @@ class DB:
         """
         self.conn = psycopg2.connect(
             dbname=self.db,
-            user=os.environ.get("POSTGRES_USER") or "arc_admin",
-            password=os.environ.get("POSTGRES_PASSWORD") or "this_is_a_really_long_fucking_password",
-            host=self.host,  # "192.168.99.100"
+            user=os.environ.get("POSTGRES_USER"),
+            password=os.environ.get("POSTGRES_PASSWORD"),
+            host=self.host,
             port=self.port
         )
