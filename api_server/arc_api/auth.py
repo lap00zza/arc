@@ -27,9 +27,16 @@ class Auth:
         self.algorithm = algorithm
 
     # TODO: remember this part will validate against postgres
+    # TODO: how to invalidate this token? Maybe a blacklist?
     def generate_token(self, email, password):
         return jwt.encode({
             "email": email,
             "iss": "arc",
             "iat": datetime.utcnow()
         }, self.secret, self.algorithm).decode("utf-8")
+
+    def decode_token(self, token):
+        try:
+            return jwt.decode(token, key=self.secret, algorithms=self.algorithm)
+        except jwt.DecodeError:
+            return False

@@ -1,6 +1,15 @@
 # Use an official Python runtime as a base image (os: alpine linux)
 FROM python:3.6.1-alpine
 
+# These packages are needed to build psycopg2 and bcrypt. Also, this line should go
+# first so that changes below wont cause use to download all the packages again.
+RUN apk update && apk add \
+    postgresql-dev \
+    gcc \
+    python3-dev \
+    musl-dev \
+    libffi-dev
+
 # Add requirements.txt before rest of repo, for Docker caching purposes
 # See http://ilikestuffblog.com/2014/01/06/
 ADD requirements.txt /api_server/

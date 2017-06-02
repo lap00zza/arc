@@ -23,9 +23,10 @@ from threading import Thread
 import websockets
 import asyncio
 import json
-from .auth import Auth
 from datetime import datetime
 import os
+from .auth import Auth
+from .database import DB, NoUserError, LengthError, ValidationError
 
 
 # TODO: Use a message broker (REDIS or rabbitMQ) for sending messages to the
@@ -58,14 +59,22 @@ class WSClient(Thread):
 class APIServer(Flask):
     def __init__(self):
         Flask.__init__(self, __name__)
+
+        # Auth Initialization
         self.auth = Auth(os.environ.get("JWT_SECRET"), "HS256")
+
+        # Database initialization
+        self.db = DB()
+        self.db.connect()
 
         # Register the routes
         # TODO: message rate limit 10 per 5 second
         # TODO: message character limit: 2000
         self.route("/api", methods=["GET", "POST"])(self.index)
+        self.route("/api/v1/myInfo", methods=["GET"])(self.my_info)
         self.route("/api/v1/messages", methods=["POST"])(self.post_message)
         self.route("/api/v1/auth/login", methods=["POST"])(self.login)
+        self.route("/api/v1/auth/register", methods=["POST"])(self.register)
 
         # start the ws client thread
         self.ws_client = WSClient()
@@ -77,34 +86,163 @@ class APIServer(Flask):
             "hello": "api is working properly"
         }), 200
 
-    def post_message(self):
+    # TODO: proper exception handling for this route
+    def my_info(self):
         try:
-            content = request.form["content"]
-            author = request.form["author"]
-            self.ws_client.send_message(json.dumps({
-                "type": "POST_MESSAGE",
-                "content": content,
-                "author": author
-            }))
-            return jsonify({
-                # TODO: the iso format doesn't append the last Z.
-                "timestamp": datetime.utcnow().isoformat()
-            })
+            auth_header = request.headers.get("authorization")
+            decoded = self.auth.decode_token(auth_header[7:])
+            if decoded:
+                user_info = self.db.get_user_info(decoded.get("email"))
+                print(user_info)
+                return jsonify({
+                    "id": user_info[0],
+                    "username": user_info[1],
+                    "avatar": user_info[2]
+                }), 200
+
+            else:
+                return jsonify({
+                    "error": "Invalid token."
+                }), 401
 
         except KeyError:
             return jsonify({
-                "error": "either content or author is not passed"
+                "error": "Missing Authorization header."
             }), 400
 
-    def login(self):
+    def post_message(self):
         try:
-            email = request.form["email"]
-            password = request.form["password"]
-            print(email, password)
-            return jsonify({
-                "token": self.auth.generate_token(email, password)
-            })
+            req = request.get_json()
+            if req is None:
+                return jsonify({
+                    "error": "This endpoint only accepts content type application/json."
+                }), 400
+
+            content = req.get("content")
+            auth_header = request.headers.get("authorization")
+            decoded = self.auth.decode_token(auth_header[7:])
+
+            if decoded:
+                # TODO: this HAS TO BE CACHED somehow.
+                # Hammering the db for every single message won't do.
+                user_info = self.db.get_user_info(decoded.get("email"))
+                print(user_info)
+
+                self.ws_client.send_message(json.dumps({
+                    "type": "POST_MESSAGE",
+                    "content": content,
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "author": {
+                        "id": user_info[0],
+                        "username": user_info[1],
+                        "avatar": user_info[2]
+                    }
+                }))
+
+                return jsonify({
+                    "content": content,
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "author": {
+                        "id": user_info[0],
+                        "username": user_info[1],
+                        "avatar": user_info[2]
+                    }
+                }), 200
+
+            else:
+                return jsonify({
+                    "error": "Invalid token."
+                }), 401
+
         except KeyError:
             return jsonify({
-                "error": "either email or password is missing."
+                "error": "message content is not present."
+            }), 400
+
+    #  --- Authentication / Registration Routes ---
+    def login(self):
+        try:
+            # print("Request: --> ", request)
+            # FIXME: edge case where content-type is application/json but body is blank
+            req = request.get_json()
+            if req is None:
+                return jsonify({
+                    "error": "This endpoint only accepts content type application/json."
+                }), 400
+
+            email = req["email"]
+            password = req["password"]
+
+            # First layer of validation before hitting
+            # the database abstraction api.
+            if len(email) == 0 or len(password) == 0:
+                raise KeyError
+
+            print("Login attempt: {} | {}".format(email, password))
+            try:
+                if self.db.verify_user(email, password):
+                    return jsonify({
+                        "token": self.auth.generate_token(email, password)
+                    }), 200
+
+                else:
+                    return jsonify({
+                        "error": "Login failed. Are you sure the password is correct?"
+                    }), 401
+
+            except NoUserError as e:
+                return jsonify({
+                    "error": e.message
+                }), 404
+
+        except KeyError:
+            return jsonify({
+                "error": "Email and password cant be missing or blank."
+            }), 400
+
+    def register(self):
+        try:
+            req = request.get_json()
+            if req is None:
+                return jsonify({
+                    "error": "This endpoint only accepts content type application/json."
+                }), 400
+
+            username = req["username"]
+            email = req["email"]
+            password = req["password"]
+
+            # First layer of validation before hitting
+            # the database abstraction api.
+            if len(username) == 0 or len(email) == 0 or len(password) == 0:
+                raise KeyError
+
+            print("Register attempt: {} | {}".format(email, password))
+            try:
+                # Returns true if the query executed
+                if self.db.create_user(username, email, password):
+                    return jsonify({
+                        "token": self.auth.generate_token(email, password)
+                    }), 200
+
+                # And false if it failed due to integrity error which in
+                # our case means this email id already exists.
+                else:
+                    return jsonify({
+                        "error": "This email-id already exists."
+                    }), 400
+
+            except ValidationError as e:
+                return jsonify({
+                    "error": e.message
+                }), 400
+
+            except LengthError as e:
+                return jsonify({
+                    "error": e.message
+                }), 400
+
+        except KeyError:
+            return jsonify({
+                "error": "Username, email and password can't be missing or blank."
             }), 400
