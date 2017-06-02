@@ -26,3 +26,20 @@ services:
         environment:
             # You should pass your JWT_SECRET here
             - JWT_SECRET=${JWT_SECRET}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_USER=${POSTGRES_USER}
+        depends_on:
+            - ws_server
+            - postgres
+
+    postgres:
+        build: ./postgres
+        image: arc/postgre:0.1.0
+        restart: always
+        environment:
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_USER=${POSTGRES_USER}
+        #expose:
+        #    - "5432"
+        ports:
+            - "5432:5432"
