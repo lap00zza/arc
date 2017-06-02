@@ -1,115 +1,135 @@
-.login-view
+@import "variables"
+
+.login__view
     margin: 0
     font-family: 'Raleway', sans-serif
     //font-size: 0.9em
     background-color: #f9f9f9
 
-a
-    color: #3e3e3e
+    a
+        color: #3e3e3e
 
-.keep-left
-    margin-top: 1rem
-    text-align: left
+    .keep-left
+        margin-top: 1rem
+        text-align: left
 
-.pull-right
-    float: right
+    .pull-right
+        float: right
 
-.extras
-    border-top: 1px solid #dedede
-    box-sizing: border-box
-    max-width: 400px
-
-    margin-left: auto
-    margin-right: auto
-    padding-top: 1em
-
-.title-bar
-    height: 60px
-    //border-bottom: 1px solid rgba(0, 0, 0, 0.2)
-    box-shadow: 0 1px 1px rgba(0,0,0,.1)
-    line-height: 60px
-    padding-left: 4rem
-    background: #ffffff
-    .title
-        font-size: 1.7em
-        font-weight: 600
-
-    .subtitle
-        font-size: 1em
-        font-weight: 300
-
-
-.server-info
-    margin: 60px auto
-    border: 1px solid #dedede
-    border-radius: 5px
-
-    min-height: 200px
-    min-width: 300px
-    width: 50%
-    height: 70%
-
-    padding: 2rem
-    background: #ffffff
-    text-align: center
-
-    .name
-        font-size: 2rem
-        font-weight: 600
-        margin-bottom: 1rem
-        color: #2f2f2f
-
-    .description
-        font-size: 1.2rem
-        margin-bottom: 1rem
-        color: #5f5f5f
-
-    form
-        max-width: 400px
+    .extras
+        border-top: 1px solid #dedede
         box-sizing: border-box
-        margin: auto
+        max-width: 400px
 
-        input[type=text], input[type=password]
-            font-family: 'Raleway', sans-serif
-            font-size: 1.2rem
+        margin-left: auto
+        margin-right: auto
+        padding-top: 1em
 
-            padding-left: 1rem
-            padding-right: 1rem
+        color: #34495E
 
-            box-sizing: border-box
-            margin-bottom: 1rem
-            height: 2.5rem
-
-            outline: none
-            border: 1px solid #dedede
-            border-radius: 5px
-            width: 100%
-
-            &:hover, &:active
-                border: 1px solid #8FF200
-        button
-            font-family: 'Raleway', sans-serif
-            color: #fafafa
+    .title-bar
+        height: 60px
+        //border-bottom: 1px solid rgba(0, 0, 0, 0.2)
+        box-shadow: 0 1px 1px rgba(0,0,0,.1)
+        line-height: 60px
+        padding-left: 2rem
+        background: #ffffff
+        .title
+            font-size: 1.7em
             font-weight: 600
-            font-size: 1.4rem
 
-            width: 100%
-            height: 2.5rem
+        .subtitle
+            font-size: 1em
+            font-weight: 300
 
-            cursor: pointer
-            outline: none
+
+    .server-info
+        margin: 60px auto
+        border: 1px solid #dedede
+        border-radius: 5px
+
+        padding: 2rem
+        background: #ffffff
+        text-align: center
+
+        #notification
+            padding-bottom: 0.3em
+            font-size: 0.9em
+            color: #34495E
+
+        .name
+            font-size: 2rem
+            font-weight: 600
+            margin-bottom: 0.7rem
+            color: #2f2f2f
+
+        .description
+            font-size: 1.2rem
+            margin-bottom: 2rem
+            color: #5f5f5f
+
+        form
+            max-width: 400px
             box-sizing: border-box
-            border: 0
-            border-radius: 5px
+            margin: auto
 
-            background-color: #6EB900
+            input[type=text], input[type=password]
+                font-family: 'Raleway', sans-serif
+                font-size: 1.2rem
 
-            &:hover
-                box-shadow: 3px 3px 8px rgba(0,0,0,.3)
-            &:active
-                box-shadow: none
+                padding-left: 1rem
+                padding-right: 1rem
 
-._login_meta
+                box-sizing: border-box
+                margin-bottom: 1rem
+                height: 2.5rem
+
+                outline: none
+                border: 1px solid #dedede
+                border-radius: 5px
+                width: 100%
+
+                &:hover, &:active
+                    border: 1px solid #34495E
+            button
+                font-family: 'Raleway', sans-serif
+                color: #fafafa
+                font-weight: 600
+                font-size: 1.4rem
+
+                width: 100%
+                height: 2.5rem
+
+                cursor: pointer
+                outline: none
+                box-sizing: border-box
+                border: 0
+                border-radius: 5px
+
+                background-color: #34495E
+                position: relative
+
+                img
+                    height: inherit
+
+                &:hover
+                    box-shadow: 3px 3px 8px rgba(0,0,0,.3)
+                &:active
+                    box-shadow: none
+
+.login__btn--in-progress
+    > span
+        display: none
+    > img
+        display: inline-block
+
+.login__btn--rest
+    > span
+        display: inline-block
+    > img
+        display: none
+
+.login__meta
     margin: 0 auto 1rem auto
     padding: 0 2rem
     font-size: 0.9rem
