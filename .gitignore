@@ -1,6 +1,7 @@
 .idea/
 nginx/client/build
 nginx/extras
+api_server/test_db.py
 
 # Created by https://www.gitignore.io/api/python
 ### Node ###
