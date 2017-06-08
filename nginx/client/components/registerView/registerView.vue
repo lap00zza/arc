@@ -12,7 +12,7 @@
                 <input v-model="email" type="text" placeholder="email" required>
                 <input v-model="password" type="password" placeholder="password" required>
                 <button type="submit" v-bind:class="in_progress ? 'login__btn--in-progress' : 'login__btn--rest'">
-                    <span>Log in</span>
+                    <span>Register</span>
                     <img src="/assets/images/puff.svg">
                 </button>
             </form>

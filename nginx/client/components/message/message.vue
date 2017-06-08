@@ -1,20 +1,26 @@
 <template>
-    <div class="message" v-once>
-        <div class="profile_image">
-            <img v-bind:src="avatar">
+    <div class="message">
+        <div class="message__author-avatar">
+            <img v-bind:src="avatar" draggable="false">
         </div>
-        <div class="message_body">
-            <div class="author">{{ message.author.username }}</div>
-            <div class="content">{{ message.content }}</div>
+        <div class="message__body">
+            <div class="message__meta">
+                <span class="message__author">{{ author.username }}</span>
+                <span class="message__local-time">{{ localTime }}</span>
+            </div>
+            <div class="message__content">{{ content }}</div>
         </div>
     </div>
 </template>
 <script>
     export default {
-        props: ["message"],
+        props: ["author", "content", "timestamp"],
         computed: {
             avatar: function () {
-                return "https://www.gravatar.com/avatar/" + this.$props.message.author.avatar
+                return "https://www.gravatar.com/avatar/" + this.$props.author.avatar;
+            },
+            localTime: function () {
+                return new Date(this.$props.timestamp).toLocaleTimeString();
             }
         }
     }

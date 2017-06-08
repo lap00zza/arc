@@ -33,18 +33,15 @@ function initializeListeners() {
         var parsed = parse(event.data);
 
         switch (parsed.type) {
-            case "ready":
-                store.commit("addMessage", {
-                    id: parsed.s,
-                    data: parsed.data
-                });
-                break;
+            // case "ready":
+            //     store.commit("addMessage", {
+            //         id: parsed.s,
+            //         data: parsed.data
+            //     });
+            //     break;
 
-            case "message":
-                store.commit("addMessage", {
-                    id: parsed.s,
-                    data: parsed.data
-                });
+            case "POST_MESSAGE":
+                store.commit("addMessage", parsed.data);
                 break;
         }
     };

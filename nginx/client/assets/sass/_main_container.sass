@@ -3,6 +3,10 @@
 .main_container
     position: relative
 
+.main__channel__loader
+    align-items: center
+    justify-content: center
+
 @media screen and (max-width: 500px)
     .users
         margin-right: -220px
@@ -15,19 +19,22 @@
     flex-shrink: 0
     align-items: center
 
-    min-height: $descriptionHeight
+    min-height: $channelInfoHeight
     border-bottom: 1px solid #dedede
+    box-sizing: border-box
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)
     z-index: 200
 
     .info-item
-        margin-left: 1em
+        margin-left: 1rem
 
     .name
-        font-weight: 600
-        font-size: 1.3em
+        font-weight: 800
+        font-size: 1.1rem
 
     .description
         color: #717274
+        font-size: 0.85rem
 
 // When the display becomes small we show
 // this channel toggle button.
@@ -49,22 +56,41 @@
         overflow-x: hidden
         overflow-y: auto
 
+        .blank_channel_template
+            margin-top: 50px
+            padding: 1rem
+            border-bottom: 1px solid #dedede
+
+            font-size: 1rem
+            margin-bottom: 1rem
+
+            h1
+                margin-bottom: -0.5rem
+                color: #555459
+            p
+                max-width: 500px
+                color: #555459
+
 // FIXME: the text area is not exactly at the center
+// TODO: completely redo this
 .message-send-wrapper
     box-sizing: border-box
     border-top: 1px solid #dedede
 
     .message-send
-        margin: 1em 1em 1.5em 1em
+        margin: 1rem 1rem 1.5rem 1rem
         .widget
+            box-sizing: border-box
             border: 2px solid #dedede
             border-radius: 5px
+
             display: flex
-            box-sizing: border-box
-            padding: 0.5em 0.5em
+            padding: 0.5rem 0.5rem
 
             textarea
-                font-family: 'Raleway', sans-serif
+                font-family: 'Open Sans', sans-serif
+                font-size: 0.85rem
+
                 max-height: 100px
                 width: 100%
                 border: 0
@@ -77,4 +103,7 @@
                 width: 40px
                 min-height: 40px
                 border-left: 2px solid #dedede
-                margin: -0.5em 0
+                margin: -0.5rem 0
+
+        .meta
+            font-size: 0.85rem

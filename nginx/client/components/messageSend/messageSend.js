@@ -37,6 +37,8 @@ export default {
                 e.preventDefault();
                 var textArea = e.target;
                 
+                var chan_id = this.$props.channelId;
+                
                 // The following regex removes any whitespace character at 
                 // the start and at the end of the message.
                 var message = this.sendMessageInput.replace(/^\s+|\s+$/g, "");
@@ -49,7 +51,7 @@ export default {
 
                 // TODO: maybe send the payload as json (like how discord does it)
                 this.$http
-                    .post("/api/v1/messages", {
+                    .post(`/api/v1/channel/${chan_id}/messages`, {
                         content: message
                     }, {
                         headers: {
@@ -69,5 +71,6 @@ export default {
                 resetTextarea(textArea);
             }
         }
-    }
+    },
+    props: ["channelId"]
 }

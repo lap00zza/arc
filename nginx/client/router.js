@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import * as AppView from "./components/appView/appView.vue";
+import * as MainView from "./components/mainView/mainView.vue";
 import * as LoginView from "./components/loginView/loginView.vue";
 import * as RegisterView from "./components/registerView/registerView.vue";
 
@@ -10,12 +10,10 @@ export default new VueRouter({
     mode: "history",
     routes: [{
         path: "/channel/:channelId",
-        component: AppView,
+        component: MainView,
         name: "channel",
         props: function (route) {
             return {
-                channelName: "#general",
-                channelDesc: "Discuss anything here :)",
                 channelId: route.params.channelId
             }
         }
