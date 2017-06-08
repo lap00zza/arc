@@ -21,7 +21,7 @@ along with arc.  If not, see <http://www.gnu.org/licenses/>.
 import asyncio
 import websockets
 import json
-import datetime
+# import datetime
 import uuid
 
 __all__ = ["WSServer"]
@@ -55,33 +55,32 @@ class WSServer:
         return json.dumps({
             "type": event_type,
             "data": data,
-            "ts": datetime.datetime.utcnow().isoformat(),
             "s": serial
         })
 
     # This will later be used to add author metadata, channel
     # metadata and a few other cool stuff.
-    @staticmethod
-    def generate_message(content, author=None):
-        """
-        Generate a message.
-
-        Parameters
-        ----------
-        content: str
-            The actual content of the message.
-        author: str
-            Username of the author.
-
-        Returns
-        -------
-        message: dict
-            The message.
-        """
-        return {
-            "author": author,
-            "content": content
-        }
+    # @staticmethod
+    # def generate_message(content, author=None):
+    #     """
+    #     Generate a message.
+    #
+    #     Parameters
+    #     ----------
+    #     content: str
+    #         The actual content of the message.
+    #     author: str
+    #         Username of the author.
+    #
+    #     Returns
+    #     -------
+    #     message: dict
+    #         The message.
+    #     """
+    #     return {
+    #         "author": author,
+    #         "content": content
+    #     }
 
     async def broadcast(self, event_type, data=None, enable_serial=True):
         for ws in self.connected:
@@ -106,7 +105,7 @@ class WSServer:
             await asyncio.sleep(self.HEART_BEAT_INTERVAL)
 
             try:
-                await self.broadcast("heartbeat", enable_serial=False)
+                await self.broadcast("HEARTBEAT", enable_serial=False)
             except Exception as e:
                 print(e)
 
@@ -124,8 +123,10 @@ class WSServer:
 
         try:
             # Send initial message
-            ready_msg = self.generate_message("Welcome to arc!")
-            await websocket.send(self.generate_event("ready", ready_msg, 0))
+            ready_msg = {
+                "message": "Welcome to arc! This is the websocket gateway. Have a nice day!",
+            }
+            await websocket.send(self.generate_event("HELLO", ready_msg, 0))
             del ready_msg
 
             # TODO: maybe delete some unwanted variables?
@@ -133,11 +134,11 @@ class WSServer:
                 message = await websocket.recv()
                 try:
                     parsed = json.loads(message)
-                    if parsed["type"] == "POST_MESSAGE":
-                        gen_msg = self.generate_message(parsed["content"], parsed["author"])
+                    # if parsed["type"] == "POST_MESSAGE":
+                    #     gen_msg = self.generate_message(parsed["content"], parsed["author"])
 
-                        print("POST_MESSAGE: {}".format(gen_msg))
-                        await self.broadcast("message", gen_msg)
+                    print("POST_MESSAGE: {}".format(parsed["data"]))
+                    await self.broadcast(parsed["type"], parsed["data"])
 
                 except Exception as e:
                     print(e)
