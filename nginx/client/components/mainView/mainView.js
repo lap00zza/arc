@@ -23,6 +23,7 @@ export default {
         // TODO: Websocket should only receive data after verifying token
         // TODO: api calls should probably be made using vuex actions
         var token = window.localStorage.getItem("token");
+        var ctx = this;
         console.log("token: ", token);
         if (token) {
             this.$http
@@ -41,7 +42,14 @@ export default {
                     store.commit("addChannel", resp.data.channels);
                 })
                 .catch(function (e) {
-                    console.debug(e)
+                    console.debug(e);
+                    // If we get unauthorized, we make the route to
+                    // the login page.
+                    if(e.status === 401) {
+                        ctx.$router.push({
+                            name: "login"
+                        })
+                    }
                 });
 
             // Start the websocket connection.

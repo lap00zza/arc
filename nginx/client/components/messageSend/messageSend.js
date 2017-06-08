@@ -27,7 +27,7 @@ export default {
         },
         onKeyDown: function (e) {
             // NOTE: 'this' refers to this entire component
-            
+
             // When the user presses enter without holding the shift key, 
             // we send the message. Else, we do nothing which translates 
             // to new line being added.
@@ -36,13 +36,14 @@ export default {
                 // to the textarea when enter key is pressed.
                 e.preventDefault();
                 var textArea = e.target;
-                
+                var ctx = this;
+
                 var chan_id = this.$props.channelId;
-                
+
                 // The following regex removes any whitespace character at 
                 // the start and at the end of the message.
                 var message = this.sendMessageInput.replace(/^\s+|\s+$/g, "");
-                
+
                 // We won't send blank messages.
                 // TODO: need a server side validation for blank messages
                 if (message.length === 0) {
@@ -60,11 +61,16 @@ export default {
                     })
                     .then(function success() {
                         console.log("Message successfully sent!");
-                        
-                    }, function  error(e) {
+
+                    }, function error(e) {
                         console.debug(e);
+                        if (e.status === 401) {
+                            ctx.$router.push({
+                                name: "login"
+                            })
+                        }
                     });
-                
+
                 // empty the text area once we send 
                 // the message, and then resize it.
                 this.sendMessageInput = "";
