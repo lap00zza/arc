@@ -26,7 +26,8 @@ import json
 from datetime import datetime
 import os
 from .auth import Auth
-from .database import DB, NoUserError, LengthError, ValidationError
+from .database import DB, NoUserError, LengthError, ValidationError, NoChannelError
+from .snowflake import snowflake
 
 
 # TODO: Use a message broker (REDIS or rabbitMQ) for sending messages to the WS Server
@@ -55,6 +56,23 @@ class WSClient(Thread):
         self.loop.run_forever()
 
 
+# Temporary replacement for redis
+class MemStore:
+    """
+    A dead simple in-memory store, intended to be used as a
+    temporary until I set redis up.
+    """
+    def __init__(self):
+        self.store = {}
+
+    def set(self, key, value):
+        self.store[key] = value
+        return True
+
+    def get(self, key):
+        return self.store.get(key, False)
+
+
 # TODO: Add tests
 class APIServer(Flask):
     """
@@ -76,13 +94,16 @@ class APIServer(Flask):
         # TODO: message rate limit 10 per 5 second
         self.route("/api", methods=["GET", "POST"])(self.index)
         self.route("/api/v1/myInfo", methods=["GET"])(self.my_info)
-        self.route("/api/v1/messages", methods=["POST"])(self.post_message)
+        self.route("/api/v1/channel/<channel_id>/messages", methods=["POST"])(self.messages)
         self.route("/api/v1/auth/login", methods=["POST"])(self.login)
         self.route("/api/v1/auth/register", methods=["POST"])(self.register)
 
         # start the ws client thread
         self.ws_client = WSClient()
         self.ws_client.start()
+
+        # TODO: this is temporary redis replacement. Remove it later.
+        self.mem_store = MemStore()
 
     # --- HELPER METHODS ---
     @staticmethod
@@ -170,6 +191,25 @@ class APIServer(Flask):
 
         return decoded, 200
 
+    def _user_data(self, email):
+        user_info = self.mem_store.get("user:" + email)
+        if user_info is False:
+            print("DB_HIT__USER: {}".format(email))
+            user_info = self.db.get_user(email)
+            self.mem_store.set("user:" + email, user_info)
+        return user_info
+
+    def _channel_data(self, channel_id):
+        chan_info = self.mem_store.get("chan:" + channel_id)
+        if chan_info is False:
+            print("DB_HIT__CHANNEL: {}".format(channel_id))
+            try:
+                chan_info = self.db.get_channel(channel_id)
+                self.mem_store.set("chan:" + channel_id, chan_info)
+            except NoChannelError:
+                print("Channel {} does not exist.".format(channel_id))
+        return chan_info
+
     # --- ENDPOINTS START FROM HERE ---
     @staticmethod
     def index():
@@ -186,18 +226,32 @@ class APIServer(Flask):
         # then data will the corresponding error message.
         data, code = self._verify(request)
         if code == 200:
-            user_info = self.db.get_user_info(data["email"])
+            user_info = self._user_data(data["email"])
             print(user_info)
+
+            channels = []
+            # TODO: is bulk reading for every user while login a good idea?
+            for channel in self.db.get_all_channels():
+                channels.append({
+                    "id": channel[0],
+                    "name": channel[1],
+                    "description": channel[2],
+                    "timestamp": channel[3]
+                })
+
             return jsonify({
                 "id": user_info[0],
                 "username": user_info[1],
-                "avatar": user_info[2]
+                "avatar": user_info[2],
+                "channels": channels
             }), code
 
         else:
             return jsonify(data), code
 
-    def post_message(self):
+    def messages(self, channel_id):
+        # print(channel_id)
+
         # --- Validate JSON ---
         # Note: if the request is valid json then it
         # req will be the parsed JSON. Else req is the
@@ -205,6 +259,13 @@ class APIServer(Flask):
         req, code = self._validate_json_req(request)
         if code != 200:
             return jsonify(req), code
+
+        # --- Validate Channel ---
+        chan_info = self._channel_data(channel_id)
+        if chan_info is False:
+            return jsonify({
+                "error": "This channel does not exist. POST your message to a valid channel."
+            }), 400
 
         #  --- Validate Type ---
         err, code = self._validate_type(req, [{
@@ -231,28 +292,41 @@ class APIServer(Flask):
         if code == 200:
             # TODO: this HAS TO BE CACHED somehow.
             # Hammering the db for every single message won't do.
-            user_info = self.db.get_user_info(data["email"])
+            user_info = self._user_data(data["email"])
             print(user_info)
+
+            # Since snowflake generates new id on every call
+            # we need to save one right here for use by both
+            # the response and the message to the WS server.
+            message_id = snowflake.generate()
 
             self.ws_client.send_message(json.dumps({
                 "type": "POST_MESSAGE",
-                "content": req["content"],
-                "timestamp": datetime.utcnow().isoformat(),
-                "author": {
-                    "id": user_info[0],
-                    "username": user_info[1],
-                    "avatar": user_info[2]
+                "data": {
+                    "content": req["content"],
+                    # The +00:00 helps us indicate to client js that
+                    # this ts is indeed a UTC timestamp. \o/
+                    "timestamp": datetime.utcnow().isoformat() + "+00:00",
+                    "author": {
+                        "id": user_info[0],
+                        "username": user_info[1],
+                        "avatar": user_info[2]
+                    },
+                    "id": message_id,
+                    "channel_id": chan_info[0]
                 }
             }))
 
             return jsonify({
                 "content": req["content"],
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.utcnow().isoformat() + "+00:00",
                 "author": {
                     "id": user_info[0],
                     "username": user_info[1],
                     "avatar": user_info[2]
-                }
+                },
+                "id": message_id,
+                "channel_id": chan_info[0]
             }), code
         else:
             return jsonify(data), code

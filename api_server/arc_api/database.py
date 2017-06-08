@@ -23,6 +23,7 @@ import bcrypt
 from datetime import datetime
 import hashlib
 import re
+from .snowflake import snowflake
 # import uuid
 # import random
 
@@ -47,6 +48,11 @@ class NoUserError(Error):
         self.message = message
 
 
+class NoChannelError(Error):
+    def __init__(self, message):
+        self.message = message
+
+
 class ValidationError(Error):
     """
     This is a general exception. Its meant to be raised when validation
@@ -56,6 +62,7 @@ class ValidationError(Error):
         self.message = message
 
 
+# TODO: Implement Stored Procedures sometime in the future
 class DB:
     """
     Methods for interfacing with our database. We are using POSTGRES for
@@ -104,6 +111,8 @@ class DB:
                 cur.execute("SELECT * FROM users")
                 return cur.fetchall()
 
+    # --- BULK LIST METHODS ---
+    # These should somehow be optimized a bit
     # Fetch a list of all the channels.
     def get_all_channels(self):
         with self.conn:
@@ -133,18 +142,22 @@ class DB:
                 try:
                     cur.execute(
                         """
-                        INSERT INTO users (user_name, user_email, user_password_hash, user_timestamp, user_avatar)
-                        VALUES (%s, %s, %s, %s, %s)
+                        INSERT INTO users (user_id, user_name, user_email, user_password_hash, user_timestamp,
+                        user_avatar)
+                        VALUES (%s, %s, %s, %s, %s, %s)
                         """,
-                        (username, email, self._hash_password(password), datetime.utcnow(), self._hash_email(email))
+                        (snowflake.generate(), username, email, self._hash_password(password), datetime.utcnow(),
+                         self._hash_email(email))
                     )
                     return True
 
                 # For now, this happens when the unique email constraint
                 # is violated.
                 except psycopg2.IntegrityError:
+                    print("This email_id already exists. Sorry bruh!")
                     return False
 
+    # TODO: verify_user is probably better off in `auth.py`
     def verify_user(self, email: str, password: str):
         """
         Verify user on login.
@@ -159,6 +172,12 @@ class DB:
         bool
             Whether verification succeeded or failed.
         """
+        if len(password) < 8 or len(password) > 72:
+            raise LengthError("password", "Password length should be between 8 and 72 characters.")
+
+        if not self._is_valid_email(email):
+            raise ValidationError("Please enter a valid email-id.")
+
         with self.conn:
             with self.conn.cursor() as cur:
                 cur.execute(
@@ -174,7 +193,7 @@ class DB:
                 return bcrypt.checkpw(password.encode("utf-8"), results[0][0].encode("utf-8"))
 
     # This is used with myInfo api endpoint
-    def get_user_info(self, email: str):
+    def get_user(self, email: str):
         with self.conn:
             with self.conn.cursor() as cur:
                 cur.execute(
@@ -210,12 +229,30 @@ class DB:
             with self.conn.cursor() as cur:
                 cur.execute(
                     """
-                    INSERT INTO channels (chan_name, chan_desc, chan_timestamp)
-                    VALUES (%s, %s, %s)
+                    INSERT INTO channels (chan_id, chan_name, chan_desc, chan_timestamp)
+                    VALUES (%s, %s, %s, %s)
                     """,
-                    (chan_name, chan_desc, datetime.utcnow())
+                    (snowflake.generate(), chan_name, chan_desc, datetime.utcnow())
                 )
                 return True
+
+    def get_channel(self, channel_id):
+        """
+        Fetches all the available channels.
+        """
+        with self.conn:
+            with self.conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT chan_id, chan_name, chan_desc, chan_timestamp FROM channels WHERE chan_id = %s
+                    """,
+                    (channel_id, )
+                )
+                results = cur.fetchall()
+                if len(results) == 0:
+                    raise NoChannelError("Requested channel does not exist.")
+
+                return results[0]
 
     # The most crucial method
     def connect(self):
